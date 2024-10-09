@@ -9,11 +9,13 @@ typealias ScreenId = String
 
 sealed class Screen(
     val id: ScreenId,
+    val title: String,
     val selectorStyle: SelectorStyle,
 ) {
 
     data object Animation : Screen(
         id = "anim",
+        title = "Round Progress",
         selectorStyle = SelectorStyle(
             icon = R.drawable.ic_play,
             color = AnimationsColor.LightPeach,
@@ -22,6 +24,7 @@ sealed class Screen(
 
     data object Animation2 : Screen(
         id = "anim2",
+        title = "Round Progress",
         selectorStyle = SelectorStyle(
             icon = R.drawable.ic_globe,
             color = AnimationsColor.LightPeach,
@@ -34,7 +37,7 @@ sealed class Screen(
 
         fun iaSelectorExpandOnStart() = true
 
-        fun findScreen(id: ScreenId): Screen? {
+        fun findScreen(id: ScreenId?): Screen? {
             return getAll().find { it.id == id }
         }
 
