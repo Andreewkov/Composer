@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import ru.andreewkov.animations.ui.screen.ScreenId
 import ru.andreewkov.animations.ui.theme.AnimationsColor
 import ru.andreewkov.animations.ui.utils.AnimationScopePreview
 import ru.andreewkov.animations.ui.utils.AnimationsPreview
@@ -72,6 +73,12 @@ private const val CIRCLE_CENTER_PRESSED_COEFFICIENT = 0.04f
 private const val CIRCLE_PRESSED_COEFFICIENT = 0.08f
 private const val ANIMATION_ANGLE_DURATION_MS = 120L
 
+private typealias OnItemClick = (ScreenId) -> Unit
+private typealias OnClick = () -> Unit
+private typealias OnOutsideClick = () -> Unit
+private typealias OnAnimationStarted = () -> Unit
+private typealias OnSizeChanged = (IntSize) -> Unit
+
 context(SharedTransitionScope, AnimatedVisibilityScope)
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -79,9 +86,9 @@ fun RoundSelectorWidget(
     centerColor: Color,
     items: List<CircleItem>,
     minCount: Int,
-    onItemClick: (String) -> Unit,
+    onItemClick: OnItemClick,
     modifier: Modifier = Modifier,
-    onOutsideClick: () -> Unit = { },
+    onOutsideClick: OnOutsideClick,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     var centerCircleRadiusDp by remember { mutableStateOf(0.dp) }
@@ -112,8 +119,8 @@ fun RoundSelectorWidget(
                     isStartAnimation.value = true
                 },
                 modifier = modifierFactory(CENTER_CIRCLE_WEIGHT),
-                onSizeChanged = {
-                    centerCircleRadiusDp = (it.width / density).dp / 2
+                onSizeChanged = { size ->
+                    centerCircleRadiusDp = (size.width / density).dp / 2
                     extremeCircleRadiusDp = getExtremeCircleRadius(angle, centerCircleRadiusDp)
                 },
             )
@@ -126,7 +133,7 @@ fun RoundSelectorWidget(
             angle = angle,
             isAnimateCircles = isStartAnimation.value,
             onAnimationStarted = { isStartAnimation.value = false },
-            onItemClick = { onItemClick(it) }
+            onItemClick = onItemClick,
         )
     }
 }
@@ -163,8 +170,8 @@ private fun ExtremeCircles(
     extremeRadiusDp: Dp,
     angle: Float,
     isAnimateCircles: Boolean,
-    onAnimationStarted: () -> Unit,
-    onItemClick: (String) -> Unit,
+    onAnimationStarted: OnAnimationStarted,
+    onItemClick: OnItemClick,
 ) {
     val circleStates = remember { hashMapOf<Int, MutableStateFlow<CircleState>>() }
     val coroutineScope = rememberCoroutineScope()
@@ -220,9 +227,9 @@ context(SharedTransitionScope, AnimatedVisibilityScope)
 private fun CenterCircle(
     radius: Dp,
     background: Color,
-    onClick: () -> Unit,
+    onClick: OnClick,
     modifier: Modifier = Modifier,
-    onSizeChanged: (IntSize) -> Unit = { },
+    onSizeChanged: OnSizeChanged,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
@@ -293,7 +300,7 @@ private fun CenterCircle(
 private fun Circle(
     radius: Dp,
     backgroundColor: Color,
-    onClick: () -> Unit,
+    onClick: OnClick,
     @DrawableRes iconRes: Int,
     modifier: Modifier = Modifier,
     angle: Float = 0f,
@@ -356,7 +363,8 @@ private fun RoundSelectorWidgetPreview() {
             centerColor = AnimationsColor.Peach,
             items = generateCircleItems(9, AnimationsColor.LightPeach),
             minCount = 12,
-            onItemClick = {},
+            onItemClick = { },
+            onOutsideClick = { },
             modifier = Modifier.padding(40.dp),
         )
     }

@@ -1,4 +1,4 @@
-package ru.andreewkov.animations.ui.selector
+package ru.andreewkov.animations.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
@@ -39,18 +39,16 @@ import ru.andreewkov.animations.ui.utils.Preview
 import ru.andreewkov.animations.ui.widgets.selector.RoundSelectorWidget
 import ru.andreewkov.animations.ui.widgets.selector.mapToCircleItems
 
-typealias OnSelectorExpand = (Boolean) -> Unit
-typealias OnSelectorClick = () -> Unit
-typealias OnItemClick = (String) -> Unit
-typealias OnOutsideClick = () -> Unit
+private typealias OnSelectorClick = () -> Unit
+private typealias OnItemClick = (String) -> Unit
+private typealias OnOutsideClick = () -> Unit
 
 @Composable
 fun SelectorWidget(
     navController: NavController,
-    onSelectorExpand: OnSelectorExpand,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: SelectorViewModel = viewModel()
+    val viewModel: MainAppViewModel = viewModel()
     val screenState by viewModel.screenState.collectAsState()
     val currentScreen by remember { mutableStateOf(screenState.currentScreen) }
 
@@ -58,14 +56,13 @@ fun SelectorWidget(
         navController.navigate(currentScreen.id)
     }
 
-    BackHandler(enabled = screenState is SelectorViewModel.ScreenState.Expand) {
+    BackHandler(enabled = screenState is MainAppViewModel.ScreenState.SelectorExpand) {
         viewModel.onBackClick()
     }
 
     SelectorContent(
         screenState = screenState,
         onItemClick = viewModel::onSelectorItemClick,
-        onSelectorExpand = onSelectorExpand,
         onOutsideClick = viewModel::onBackClick,
         onSelectorClick = viewModel::onSelectorClick,
         modifier = modifier,
@@ -75,9 +72,8 @@ fun SelectorWidget(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun SelectorContent(
-    screenState: SelectorViewModel.ScreenState,
+    screenState: MainAppViewModel.ScreenState,
     modifier: Modifier = Modifier,
-    onSelectorExpand: OnSelectorExpand = { },
     onItemClick: OnItemClick = { },
     onOutsideClick: OnOutsideClick = { },
     onSelectorClick: OnSelectorClick = { },
@@ -89,15 +85,13 @@ private fun SelectorContent(
         ) { targetState ->
             Box(modifier = modifier.fillMaxSize()) {
                 when (targetState) {
-                    is SelectorViewModel.ScreenState.Compact -> {
-                        onSelectorExpand(false)
+                    is MainAppViewModel.ScreenState.SelectorCompact -> {
                         SelectorCompactContent(
                             onSelectorClick = onSelectorClick,
                         )
                     }
 
-                    is SelectorViewModel.ScreenState.Expand -> {
-                        onSelectorExpand(true)
+                    is MainAppViewModel.ScreenState.SelectorExpand -> {
                         SelectorExpandContent(
                             onItemClick = onItemClick,
                             items = Screen.getAll(),
@@ -171,7 +165,7 @@ private fun SelectorExpandContent(
 @Composable
 private fun SelectorExpandPreview() {
     SelectorPreview(
-        startState = SelectorViewModel.ScreenState.Expand(
+        startState = MainAppViewModel.ScreenState.SelectorExpand(
             currentScreen = Screen.getStartScreen(),
             items = Screen.getAll()),
         )
@@ -182,7 +176,7 @@ private fun SelectorExpandPreview() {
 private fun SelectorCompatPreview() {
     Preview {
         SelectorPreview(
-            startState = SelectorViewModel.ScreenState.Compact(
+            startState = MainAppViewModel.ScreenState.SelectorCompact(
                 currentScreen = Screen.getStartScreen(),
             )
         )
@@ -191,20 +185,20 @@ private fun SelectorCompatPreview() {
 
 @Composable
 private fun SelectorPreview(
-    startState: SelectorViewModel.ScreenState,
+    startState: MainAppViewModel.ScreenState,
 ) {
     var screenState by remember { mutableStateOf(startState) }
     Preview {
         SelectorContent(
             screenState = screenState,
             onItemClick = {
-                screenState = SelectorViewModel.ScreenState.Compact(Screen.getStartScreen())
+                screenState = MainAppViewModel.ScreenState.SelectorCompact(Screen.getStartScreen())
             },
             onOutsideClick = {
-                screenState = SelectorViewModel.ScreenState.Compact(Screen.getStartScreen())
+                screenState = MainAppViewModel.ScreenState.SelectorCompact(Screen.getStartScreen())
             },
             onSelectorClick = {
-                screenState = SelectorViewModel.ScreenState.Expand(Screen.getStartScreen(), Screen.getAll())
+                screenState = MainAppViewModel.ScreenState.SelectorExpand(Screen.getStartScreen(), Screen.getAll())
             }
         )
     }

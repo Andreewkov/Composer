@@ -2,25 +2,18 @@ package ru.andreewkov.animations.ui
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
@@ -34,7 +27,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ru.andreewkov.animations.ui.screen.Screen
 import ru.andreewkov.animations.ui.screen.roundprogress.RoundProgressScreenUI
-import ru.andreewkov.animations.ui.selector.SelectorWidget
+import ru.andreewkov.animations.ui.MainAppViewModel.ScreenState
 import ru.andreewkov.animations.ui.theme.AnimationsColor
 import ru.andreewkov.animations.ui.utils.AnimationsPreview
 import ru.andreewkov.animations.ui.utils.Preview
@@ -44,24 +37,22 @@ fun MainAppUI(
     navController: NavHostController = rememberNavController()
 ) {
     val viewModel: MainAppViewModel = viewModel()
+    val screenState by viewModel.screenState.collectAsState()
+
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-        var isSelectorExpand by remember { mutableStateOf(Screen.iaSelectorExpandOnStart()) }
         val blurRadius by animateDpAsState(
-            targetValue = if (isSelectorExpand) 30.dp else 0.dp,
+            targetValue = if (screenState is ScreenState.SelectorExpand) {
+                30.dp
+            } else {
+                0.dp
+            },
             animationSpec = tween(durationMillis = 400),
             label = "blur_radius",
         )
 
-        LaunchedEffect(navController.currentBackStackEntryFlow) {
-            navController.currentBackStackEntryFlow.collect {
-                viewModel.onCurrentBackStackCChanged(navController.currentDestination?.route)
-            }
-        }
-        val currentTitle by viewModel.currentTitle.collectAsState()
-
         Scaffold(
             topBar = {
-                AppDar(currentTitle)
+                AppDar(screenState.currentScreen.title)
             },
             modifier = Modifier
                 .safeContentPadding()
@@ -83,9 +74,6 @@ fun MainAppUI(
         }
         SelectorWidget(
             navController = navController,
-            onSelectorExpand = { isExpand ->
-                isSelectorExpand = isExpand
-            },
             modifier = Modifier.padding(innerPadding)
         )
     }
