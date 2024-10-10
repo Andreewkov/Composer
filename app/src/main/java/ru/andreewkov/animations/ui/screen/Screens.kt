@@ -37,8 +37,8 @@ sealed class Screen(
 
         fun iaSelectorExpandOnStart() = true
 
-        fun findScreen(id: ScreenId?): Screen? {
-            return getAll().find { it.id == id }
+        fun findScreen(id: ScreenId?): Screen {
+            return getAll().find { it.id == id } ?: getStartScreen()
         }
 
         fun getAll() = listOf(

@@ -52,12 +52,12 @@ fun MainAppUI(
             label = "blur_radius",
         )
 
-        val currentTitle by viewModel.currentTitle.collectAsState()
         LaunchedEffect(navController.currentBackStackEntryFlow) {
             navController.currentBackStackEntryFlow.collect {
                 viewModel.onCurrentBackStackCChanged(navController.currentDestination?.route)
             }
         }
+        val currentTitle by viewModel.currentTitle.collectAsState()
 
         Scaffold(
             topBar = {

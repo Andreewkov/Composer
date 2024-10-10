@@ -23,12 +23,12 @@ fun Screen.mapToCircleItem(): CircleItem {
 fun generateCircleItems(count: Int, background: Color): List<CircleItem> {
     return mutableListOf<CircleItem>().also { list ->
         for (i in 0 until count) {
-            list.add(generateMockedCircleItem(background))
+            list.add(generateCircleItem(background))
         }
     }
 }
 
-private fun generateMockedCircleItem(background: Color): CircleItem {
+private fun generateCircleItem(background: Color): CircleItem {
     return CircleItem(
         id = Random.nextInt().toString(),
         color = background,

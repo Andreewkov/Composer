@@ -1,34 +1,21 @@
 package ru.andreewkov.animations.ui.widgets
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.StartOffset
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.toRect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -119,55 +106,16 @@ fun RoundProgressContent(
     }
 }
 
-private fun createBrush(): Brush {
-    return Brush.horizontalGradient()
-}
-
-@Preview
-@Composable
-private fun RoundProgressContentPreview() {
-/*    RoundProgressContent(
-        radius = 50.dp,
-        progressWidth = 10.dp,
-        color = AnimationsColor.Peach,
-    )*/
-}
-
 @Preview
 @Composable
 private fun RoundProgressWidgetPreview() {
-    Box(modifier = Modifier.size(300.dp)) {
+    Box(modifier = Modifier.size(200.dp)) {
         RoundProgressWidget(
-            progressWidth = 10.dp,
-            colors = listOf(AnimationsColor.Peach),
+            progressWidth = 30.dp,
+            colors = listOf(AnimationsColor.Peach, AnimationsColor.LightPeach, AnimationsColor.Peach),
         )
     }
 }
-
-@Preview
-@Composable
-private fun CircleLoaderPreview() {
-    CircleLoader(
-        color = Color(0xFF1F79FF),
-        secondColor = Color(0xFFFFE91F),
-        modifier = Modifier
-            .size(200.dp)
-            .padding(bottom = 200.dp)
-        ,
-        isVisible = true,
-    )
-}
-
-
-
-
-
-
-
-
-
-
-
 
 
 data class StrokeStyle(
@@ -186,7 +134,7 @@ fun CircleLoader(
     smoothTransition: Boolean = true,
     strokeStyle: StrokeStyle = StrokeStyle(),
     cycleDuration: Int = 1400,
-){
+) {
     val transition = rememberInfiniteTransition()
     val spinAngel by transition.animateFloat(
         initialValue = 0f,
@@ -202,16 +150,16 @@ fun CircleLoader(
 
     val tailToDisplay = tailLength// { Animatable(0f) }
 
-/*    LaunchedEffect(isVisible) {
-        val targetTail = if (isVisible) tailLength else 0f
-        when {
-            smoothTransition -> tailToDisplay.animateTo(
-                targetValue = targetTail,
-                animationSpec = tween(cycleDuration, easing = LinearEasing)
-            )
-            else -> tailToDisplay.snapTo(targetTail)
-        }
-    }*/
+    /*    LaunchedEffect(isVisible) {
+            val targetTail = if (isVisible) tailLength else 0f
+            when {
+                smoothTransition -> tailToDisplay.animateTo(
+                    targetValue = targetTail,
+                    animationSpec = tween(cycleDuration, easing = LinearEasing)
+                )
+                else -> tailToDisplay.snapTo(targetTail)
+            }
+        }*/
 
     Canvas(
         modifier

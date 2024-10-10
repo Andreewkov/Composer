@@ -49,6 +49,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
@@ -80,7 +81,7 @@ fun RoundSelectorWidget(
     minCount: Int,
     onItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
-    onOutsideClick: () ->  Unit = { },
+    onOutsideClick: () -> Unit = { },
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     var centerCircleRadiusDp by remember { mutableStateOf(0.dp) }
@@ -172,7 +173,7 @@ private fun ExtremeCircles(
     if (isAnimateCircles) {
         LaunchedEffect(Unit) {
             coroutineScope.launch {
-                animator.startBlinking()
+                animator.blink()
             }
             onAnimationStarted()
         }
@@ -184,8 +185,10 @@ private fun ExtremeCircles(
     }
 
     items.forEachIndexed { index, item ->
-        val state = remember {
-            MutableStateFlow(CircleState.Hide)
+        val state = if (LocalInspectionMode.current) {
+            remember { MutableStateFlow(CircleState.Open) }
+        } else {
+            remember { MutableStateFlow(CircleState.Hide) }
         }
 
         Circle(

@@ -2,7 +2,6 @@ package ru.andreewkov.animations.ui.selector
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import ru.andreewkov.animations.ui.screen.Screen
@@ -10,30 +9,27 @@ import ru.andreewkov.animations.ui.screen.ScreenId
 
 class SelectorViewModel : ViewModel() {
 
-    private val _navigationScreenState = MutableStateFlow<Screen>(Screen.getStartScreen())
-    val navigationScreenState get() = _navigationScreenState.asSharedFlow()
-
     private val _screenState = MutableStateFlow(
         if (Screen.iaSelectorExpandOnStart()) {
-            ScreenState.Expand(Screen.getAll())
+            ScreenState.Expand(Screen.getStartScreen(), Screen.getAll())
         } else {
-            ScreenState.Compact
+            ScreenState.Compact(Screen.getStartScreen())
         }
     )
     val screenState get() = _screenState.asStateFlow()
 
     fun onSelectorItemClick(id: ScreenId) {
-        _navigationScreenState.update {
-            Screen.findScreen(id) ?: Screen.getStartScreen()
-        }
         _screenState.update {
-            ScreenState.Compact
+            ScreenState.Compact(currentScreen = Screen.findScreen(id))
         }
     }
 
     fun onSelectorClick() {
         _screenState.update {
-            ScreenState.Expand(Screen.getAll())
+            ScreenState.Expand(
+                currentScreen = screenState.value.currentScreen,
+                items = Screen.getAll(),
+            )
         }
     }
 
@@ -41,18 +37,25 @@ class SelectorViewModel : ViewModel() {
         return when (_screenState.value) {
             is ScreenState.Expand -> {
                 _screenState.update {
-                    ScreenState.Compact
+                    ScreenState.Compact(currentScreen = screenState.value.currentScreen)
                 }
                 true
             }
-            ScreenState.Compact -> false
+            is ScreenState.Compact -> false
         }
     }
 
     sealed class ScreenState {
 
-        data object Compact : ScreenState()
+        abstract val currentScreen: Screen
 
-        data class Expand(val items: List<Screen>) : ScreenState()
+        data class Compact(
+            override val currentScreen: Screen,
+        ) : ScreenState()
+
+        data class Expand(
+            override val currentScreen: Screen,
+            val items: List<Screen>,
+        ) : ScreenState()
     }
 }
