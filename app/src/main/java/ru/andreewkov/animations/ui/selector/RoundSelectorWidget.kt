@@ -1,4 +1,4 @@
-package ru.andreewkov.animations.ui.widgets.selector
+package ru.andreewkov.animations.ui.selector
 
 import android.content.res.Configuration
 import androidx.annotation.DrawableRes
@@ -76,29 +76,31 @@ private const val ANIMATION_ANGLE_DURATION_MS = 120L
 private typealias OnItemClick = (ScreenId) -> Unit
 private typealias OnClick = () -> Unit
 private typealias OnOutsideClick = () -> Unit
-private typealias OnAnimationStarted = () -> Unit
 private typealias OnSizeChanged = (IntSize) -> Unit
 
 context(SharedTransitionScope, AnimatedVisibilityScope)
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun RoundSelectorWidget(
+internal fun RoundSelectorWidget(
     centerColor: Color,
     items: List<CircleItem>,
     minCount: Int,
     onItemClick: OnItemClick,
-    modifier: Modifier = Modifier,
     onOutsideClick: OnOutsideClick,
+    animator: RoundSelectorAnimator,
+    modifier: Modifier = Modifier,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     var centerCircleRadiusDp by remember { mutableStateOf(0.dp) }
     var extremeCircleRadiusDp by remember { mutableStateOf(0.dp) }
-    val isStartAnimation = remember { mutableStateOf(false) }
 
     val density = LocalDensity.current.density
 
     val count = remember { max(items.size, minCount) }
     val angle = remember { CIRCLE_DEGREES / count }
+
+    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(Unit) { animator.show() }
 
     Box(
         modifier = modifier
@@ -116,7 +118,9 @@ fun RoundSelectorWidget(
                 radius = centerCircleRadiusDp,
                 background = centerColor,
                 onClick = {
-                    isStartAnimation.value = true
+                    coroutineScope.launch {
+                        animator.blink()
+                    }
                 },
                 modifier = modifierFactory(CENTER_CIRCLE_WEIGHT),
                 onSizeChanged = { size ->
@@ -131,9 +135,8 @@ fun RoundSelectorWidget(
             centerRadiusDp = centerCircleRadiusDp,
             extremeRadiusDp = extremeCircleRadiusDp,
             angle = angle,
-            isAnimateCircles = isStartAnimation.value,
-            onAnimationStarted = { isStartAnimation.value = false },
             onItemClick = onItemClick,
+            animator = animator,
         )
     }
 }
@@ -169,33 +172,14 @@ private fun ExtremeCircles(
     centerRadiusDp: Dp,
     extremeRadiusDp: Dp,
     angle: Float,
-    isAnimateCircles: Boolean,
-    onAnimationStarted: OnAnimationStarted,
     onItemClick: OnItemClick,
+    animator: RoundSelectorAnimator,
 ) {
-    val circleStates = remember { hashMapOf<Int, MutableStateFlow<CircleState>>() }
-    val coroutineScope = rememberCoroutineScope()
-    val animator = RoundSelectorAnimator(circleStates)
-
-    if (isAnimateCircles) {
-        LaunchedEffect(Unit) {
-            coroutineScope.launch {
-                animator.blink()
-            }
-            onAnimationStarted()
-        }
-    }
-    LaunchedEffect(Unit) {
-        coroutineScope.launch {
-            animator.show()
-        }
-    }
-
+    val isInspection = LocalInspectionMode.current
     items.forEachIndexed { index, item ->
-        val state = if (LocalInspectionMode.current) {
-            remember { MutableStateFlow(CircleState.Open) }
-        } else {
-            remember { MutableStateFlow(CircleState.Hide) }
+        val state = remember {
+            val state = if (isInspection) CircleState.Open else animator.startState
+            MutableStateFlow(state)
         }
 
         Circle(
@@ -211,7 +195,7 @@ private fun ExtremeCircles(
             stateFlow = state,
         )
 
-        circleStates[index] = state
+        animator.addCircle(index, state)
     }
 }
 
@@ -365,6 +349,7 @@ private fun RoundSelectorWidgetPreview() {
             minCount = 12,
             onItemClick = { },
             onOutsideClick = { },
+            animator = RoundSelectorAnimator(CircleState.Open),
             modifier = Modifier.padding(40.dp),
         )
     }

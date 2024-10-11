@@ -1,4 +1,4 @@
-package ru.andreewkov.animations.ui.widgets.selector
+package ru.andreewkov.animations.ui.selector
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,7 +8,18 @@ private const val ANIMATION_SHOW_START_DELAY_MS = 300L
 private const val ANIMATION_BLINK_DURATION_MS = 120L
 private const val ANIMATION_SHOW_DELAY_MS = 60L
 
-internal class RoundSelectorAnimator(private val states: HashMap<Int, MutableStateFlow<CircleState>>) {
+class RoundSelectorAnimator(var startState: CircleState) {
+
+    private var states: MutableMap<Int, MutableStateFlow<CircleState>> = mutableMapOf()
+
+    fun addCircle(index: Int, state: MutableStateFlow<CircleState>) {
+        states[index] = state
+    }
+
+    fun hideCircles() {
+        startState = CircleState.Hide
+        states = mutableMapOf()
+    }
 
     suspend fun blink() {
         delay(ANIMATION_BLINK_START_DELAY_MS)

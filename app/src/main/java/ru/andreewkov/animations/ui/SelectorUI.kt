@@ -1,5 +1,6 @@
 package ru.andreewkov.animations.ui
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibilityScope
@@ -33,14 +34,17 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import ru.andreewkov.animations.ui.screen.Screen
+import ru.andreewkov.animations.ui.screen.ScreenId
+import ru.andreewkov.animations.ui.selector.CircleState
+import ru.andreewkov.animations.ui.selector.RoundSelectorAnimator
+import ru.andreewkov.animations.ui.selector.RoundSelectorWidget
+import ru.andreewkov.animations.ui.selector.mapToCircleItems
 import ru.andreewkov.animations.ui.theme.AnimationsColor
 import ru.andreewkov.animations.ui.utils.AnimationsPreview
 import ru.andreewkov.animations.ui.utils.Preview
-import ru.andreewkov.animations.ui.widgets.selector.RoundSelectorWidget
-import ru.andreewkov.animations.ui.widgets.selector.mapToCircleItems
 
 private typealias OnSelectorClick = () -> Unit
-private typealias OnItemClick = (String) -> Unit
+private typealias OnItemClick = (ScreenId) -> Unit
 private typealias OnOutsideClick = () -> Unit
 
 @Composable
@@ -78,6 +82,15 @@ private fun SelectorContent(
     onOutsideClick: OnOutsideClick = { },
     onSelectorClick: OnSelectorClick = { },
 ) {
+    val viewModel: MainAppViewModel = viewModel()
+    val animator = remember {
+        val state = if (viewModel.isSelectorExpanded()) {
+            CircleState.Open
+        } else {
+            CircleState.Hide
+        }
+        RoundSelectorAnimator(state)
+    }
     SharedTransitionLayout {
         AnimatedContent(
             targetState = screenState,
@@ -86,6 +99,7 @@ private fun SelectorContent(
             Box(modifier = modifier.fillMaxSize()) {
                 when (targetState) {
                     is MainAppViewModel.ScreenState.SelectorCompact -> {
+                        animator.hideCircles()
                         SelectorCompactContent(
                             onSelectorClick = onSelectorClick,
                         )
@@ -96,6 +110,7 @@ private fun SelectorContent(
                             onItemClick = onItemClick,
                             items = Screen.getAll(),
                             onOutsideClick = onOutsideClick,
+                            animator = animator,
                         )
                     }
                 }
@@ -149,6 +164,7 @@ private fun SelectorExpandContent(
     onItemClick: OnItemClick,
     onOutsideClick: OnOutsideClick,
     items: List<Screen>,
+    animator: RoundSelectorAnimator,
     modifier: Modifier = Modifier,
 ) {
     RoundSelectorWidget(
@@ -158,6 +174,7 @@ private fun SelectorExpandContent(
         onItemClick = onItemClick,
         modifier = modifier.padding(40.dp),
         onOutsideClick = onOutsideClick,
+        animator = animator,
     )
 }
 
@@ -167,6 +184,7 @@ private fun SelectorExpandPreview() {
     SelectorPreview(
         startState = MainAppViewModel.ScreenState.SelectorExpand(
             currentScreen = Screen.getStartScreen(),
+            isExpanded = false,
             items = Screen.getAll()),
         )
 }
@@ -198,7 +216,11 @@ private fun SelectorPreview(
                 screenState = MainAppViewModel.ScreenState.SelectorCompact(Screen.getStartScreen())
             },
             onSelectorClick = {
-                screenState = MainAppViewModel.ScreenState.SelectorExpand(Screen.getStartScreen(), Screen.getAll())
+                screenState = MainAppViewModel.ScreenState.SelectorExpand(
+                    currentScreen = Screen.getStartScreen(),
+                    isExpanded = true,
+                    items = Screen.getAll(),
+                )
             }
         )
     }

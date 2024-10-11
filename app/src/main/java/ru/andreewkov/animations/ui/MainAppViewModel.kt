@@ -11,12 +11,17 @@ class MainAppViewModel : ViewModel() {
 
     private val _screenState = MutableStateFlow(
         if (Screen.iaSelectorExpandOnStart()) {
-            ScreenState.SelectorExpand(Screen.getStartScreen(), Screen.getAll())
+            ScreenState.SelectorExpand(Screen.getStartScreen(), isExpanded = false, Screen.getAll())
         } else {
             ScreenState.SelectorCompact(Screen.getStartScreen())
         }
     )
     val screenState get() = _screenState.asStateFlow()
+
+    fun isSelectorExpanded(): Boolean {
+        val expandState = _screenState.value as? ScreenState.SelectorExpand ?: return false
+        return expandState.isExpanded
+    }
 
     fun onSelectorItemClick(id: ScreenId) {
         _screenState.update {
@@ -28,6 +33,7 @@ class MainAppViewModel : ViewModel() {
         _screenState.update {
             ScreenState.SelectorExpand(
                 currentScreen = screenState.value.currentScreen,
+                isExpanded = true,
                 items = Screen.getAll(),
             )
         }
@@ -55,6 +61,7 @@ class MainAppViewModel : ViewModel() {
 
         data class SelectorExpand(
             override val currentScreen: Screen,
+            val isExpanded: Boolean,
             val items: List<Screen>,
         ) : ScreenState()
     }

@@ -1,4 +1,4 @@
-package ru.andreewkov.animations.ui.widgets.selector
+package ru.andreewkov.animations.ui.selector
 
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color

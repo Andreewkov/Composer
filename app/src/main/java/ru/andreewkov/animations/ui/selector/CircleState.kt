@@ -1,4 +1,4 @@
-package ru.andreewkov.animations.ui.widgets.selector
+package ru.andreewkov.animations.ui.selector
 
 enum class CircleState(val sizeOffset: Float) {
     Open(0f),
