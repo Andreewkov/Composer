@@ -1,8 +1,5 @@
-package ru.andreewkov.animations.ui.screen.roundprogress
+package ru.andreewkov.animations.ui.screen
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,7 +9,6 @@ import ru.andreewkov.animations.ui.theme.AnimationsColor
 import ru.andreewkov.animations.ui.utils.AnimationsPreview
 import ru.andreewkov.animations.ui.utils.Preview
 import ru.andreewkov.animations.ui.widgets.GridContentWidget
-import ru.andreewkov.animations.ui.widgets.GridWidget
 import ru.andreewkov.animations.ui.widgets.RoundProgressWidget
 
 private enum class RoundProgressItem {
@@ -23,7 +19,7 @@ private enum class RoundProgressItem {
 }
 
 @Composable
-fun RoundProgressScreenUI(title: String, color: Color) {
+fun RoundProgressScreenUI() {
     GridContentWidget(
         items = RoundProgressItem.entries.toList(),
     ) { item ->
@@ -37,34 +33,10 @@ fun RoundProgressScreenUI(title: String, color: Color) {
             }
             else -> {
                 RoundProgressWidget(
-                    colors = listOf(AnimationsColor.Peach, AnimationsColor.LightPeach, AnimationsColor.Peach),
+                    colors = listOf(Color.Cyan, Color.Cyan, Color.Cyan),
                     progressWidth = 30.dp,
                     modifier = Modifier.size(100.dp)
                 )
-            }
-        }
-    }
-    GridWidget(
-        columns = 2,
-        itemCount = 4,
-        modifier = Modifier.fillMaxSize()
-    ) { index ->
-        Box(modifier = Modifier.height(200.dp)) {
-            when (index) {
-                0 -> {
-                    RoundProgressWidget(
-                        colors = listOf(AnimationsColor.Peach, AnimationsColor.LightPeach, AnimationsColor.Peach),
-                        progressWidth = 30.dp,
-                        modifier = Modifier.size(100.dp)
-                    )
-                }
-                2 -> {
-                    RoundProgressWidget(
-                        colors = listOf(AnimationsColor.Peach, AnimationsColor.LightPeach, AnimationsColor.Peach),
-                        progressWidth = 30.dp,
-                        modifier = Modifier.size(100.dp)
-                    )
-                }
             }
         }
     }
@@ -74,6 +46,6 @@ fun RoundProgressScreenUI(title: String, color: Color) {
 @AnimationsPreview
 private fun RoundProgressScreenUIPreview() {
     Preview {
-        RoundProgressScreenUI(title = "anim", color = Color.Green)
+        RoundProgressScreenUI()
     }
 }

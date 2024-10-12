@@ -88,7 +88,6 @@ fun RoundProgressContent(
 ) {
     Canvas(
         modifier = modifier
-            .fillMaxSize()
             .padding(progressWidth / 2)
             .aspectRatio(1f)
     ) {

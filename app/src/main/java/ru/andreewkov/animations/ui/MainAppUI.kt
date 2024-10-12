@@ -26,7 +26,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ru.andreewkov.animations.ui.screen.Screen
-import ru.andreewkov.animations.ui.screen.roundprogress.RoundProgressScreenUI
+import ru.andreewkov.animations.ui.screen.RoundProgressScreenUI
 import ru.andreewkov.animations.ui.MainAppViewModel.ScreenState
 import ru.andreewkov.animations.ui.theme.AnimationsColor
 import ru.andreewkov.animations.ui.utils.AnimationsPreview
@@ -65,7 +65,7 @@ fun MainAppUI(
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable(route = Screen.Animation.id) {
-                    RoundProgressScreenUI(title = "anim 1", color = Color.Green)
+                    RoundProgressScreenUI()
                 }
                 composable(route = Screen.Animation2.id) {
 
