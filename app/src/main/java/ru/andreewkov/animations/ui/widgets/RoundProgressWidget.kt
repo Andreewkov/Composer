@@ -30,8 +30,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.andreewkov.animations.ui.theme.AnimationsColor
+import ru.andreewkov.animations.ui.utils.WidgetPreviewBox
 
-private const val ROUND_PROGRESS_DEFAULT_DURATION = 1000
+private const val ROUND_PROGRESS_DEFAULT_DURATION = 1400
 
 @Composable
 fun RoundProgressWidget(
@@ -108,7 +109,7 @@ fun RoundProgressContent(
 @Preview
 @Composable
 private fun RoundProgressWidgetPreview() {
-    Box(modifier = Modifier.size(200.dp)) {
+    WidgetPreviewBox {
         RoundProgressWidget(
             progressWidth = 30.dp,
             colors = listOf(AnimationsColor.Peach, AnimationsColor.LightPeach, AnimationsColor.Peach),
