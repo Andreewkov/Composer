@@ -35,6 +35,12 @@ import ru.andreewkov.animations.ui.theme.AnimationsColor
 import ru.andreewkov.animations.ui.utils.WidgetPreviewBox
 
 private const val ROUND_PROGRESS_DEFAULT_DURATION = 1400
+private const val PROGRESS_WIDTH_COEFFICIENT = 0.2f
+private const val PROGRESS_PADDING_COEFFICIENT = 0.2f
+private const val START_INITIAL_VALUE = 360f
+private const val START_TARGET_VALUE = 0F
+private const val SWEEP_INITIAL_VALUE = 200f
+private const val SWEEP_TARGET_VALUE = 20F
 
 @Composable
 fun RoundProgressWidget(
@@ -45,8 +51,8 @@ fun RoundProgressWidget(
     val transition = rememberInfiniteTransition(label = "progress")
 
     val startValue by transition.animateFloat(
-        initialValue = 360f,
-        targetValue = 0f,
+        initialValue = START_INITIAL_VALUE,
+        targetValue = START_TARGET_VALUE,
         animationSpec = infiniteRepeatable(
             animation = tween(
                 durationMillis = duration,
@@ -58,8 +64,8 @@ fun RoundProgressWidget(
         label = "startValue",
     )
     val sweepValue by transition.animateFloat(
-        initialValue = 200f,
-        targetValue = 20f,
+        initialValue = SWEEP_INITIAL_VALUE,
+        targetValue = SWEEP_TARGET_VALUE,
         animationSpec = infiniteRepeatable(
             animation = tween(
                 durationMillis = duration,
@@ -87,12 +93,11 @@ fun RoundProgressContent(
     modifier: Modifier = Modifier,
 ) {
     var size by remember { mutableStateOf(IntSize.Zero) }
-    val widthCoef = remember { 0.2f }
     Canvas(
         modifier = modifier
             .onSizeChanged { size = it }
             .aspectRatio(1f)
-            .padding(size.width.dp * widthCoef / 5)
+            .padding(size.width.dp * PROGRESS_WIDTH_COEFFICIENT * PROGRESS_PADDING_COEFFICIENT)
     ) {
         drawArc(
             brush = Brush.sweepGradient(colors),
@@ -100,7 +105,7 @@ fun RoundProgressContent(
             sweepAngle = sweepAngle,
             useCenter = false,
             style = Stroke(
-                size.width * widthCoef,
+                size.width * PROGRESS_WIDTH_COEFFICIENT,
                 cap = StrokeCap.Round,
                 miter = 0f
             )
