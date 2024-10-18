@@ -1,60 +1,57 @@
 package ru.andreewkov.animations.ui.screen
 
-import androidx.annotation.DrawableRes
-import androidx.compose.ui.graphics.Color
-import ru.andreewkov.animations.R
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import ru.andreewkov.animations.ui.theme.AnimationsColor
+import ru.andreewkov.animations.ui.utils.AnimationsPreview
+import ru.andreewkov.animations.ui.utils.Preview
+import ru.andreewkov.animations.ui.widgets.RoundLoaderWidget
+import ru.andreewkov.animations.ui.widgets.RoundProgressWidget
 
-typealias ScreenId = String
-
-sealed class Screen(
-    val id: ScreenId,
-    val title: String,
-    val selectorStyle: SelectorStyle,
-) {
-
-    data object Animation : Screen(
-        id = "anim",
-        title = "Round Progress",
-        selectorStyle = SelectorStyle(
-            icon = R.drawable.ic_play,
-            color = AnimationsColor.LightPeach,
-        )
-    )
-
-    data object Animation2 : Screen(
-        id = "anim2",
-        title = "Round Progress",
-        selectorStyle = SelectorStyle(
-            icon = R.drawable.ic_globe,
-            color = AnimationsColor.LightPeach,
-        )
-    )
-
-    companion object {
-
-        fun getStartScreen() = Animation
-
-        fun iaSelectorExpandOnStart() = true
-
-        fun findScreen(id: ScreenId?): Screen {
-            return getAll().find { it.id == id } ?: getStartScreen()
-        }
-
-        fun getAll() = listOf(
-            Animation,
-            Animation2,
-            Animation,
-            Animation2,
-            Animation,
-            Animation2,
-            Animation,
-            Animation2,
+@Composable
+fun RoundProgressScreenUI() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(50.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        RoundProgressWidget(
+            colors = listOf(AnimationsColor.Peach, AnimationsColor.LightPeach, AnimationsColor.Peach),
+            duration = 1400,
         )
     }
 }
 
-data class SelectorStyle(
-    @DrawableRes val icon: Int,
-    val color: Color,
-)
+@Composable
+fun RoundLoaderScreenUI() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(50.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        RoundLoaderWidget()
+    }
+}
+
+@AnimationsPreview
+@Composable
+private fun RoundProgressScreenUIPreview() {
+    Preview {
+        RoundProgressScreenUI()
+    }
+}
+
+@AnimationsPreview
+@Composable
+private fun RoundLoaderScreenUIPreview() {
+    Preview {
+        RoundLoaderScreenUI()
+    }
+}

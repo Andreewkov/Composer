@@ -7,13 +7,13 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.toRect
@@ -26,8 +26,10 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import ru.andreewkov.animations.ui.theme.AnimationsColor
 import ru.andreewkov.animations.ui.utils.WidgetPreviewBox
@@ -36,7 +38,6 @@ private const val ROUND_PROGRESS_DEFAULT_DURATION = 1400
 
 @Composable
 fun RoundProgressWidget(
-    progressWidth: Dp,
     colors: List<Color>,
     modifier: Modifier = Modifier,
     duration: Int = ROUND_PROGRESS_DEFAULT_DURATION,
@@ -71,7 +72,6 @@ fun RoundProgressWidget(
     )
 
     RoundProgressContent(
-        progressWidth = progressWidth,
         colors = colors,
         startAngle = startValue,
         sweepAngle = sweepValue,
@@ -81,16 +81,18 @@ fun RoundProgressWidget(
 
 @Composable
 fun RoundProgressContent(
-    progressWidth: Dp,
     colors: List<Color>,
     startAngle: Float,
     sweepAngle: Float,
     modifier: Modifier = Modifier,
 ) {
+    var size by remember { mutableStateOf(IntSize.Zero) }
+    val widthCoef = remember { 0.2f }
     Canvas(
         modifier = modifier
-            .padding(progressWidth / 2)
+            .onSizeChanged { size = it }
             .aspectRatio(1f)
+            .padding(size.width.dp * widthCoef / 5)
     ) {
         drawArc(
             brush = Brush.sweepGradient(colors),
@@ -98,7 +100,7 @@ fun RoundProgressContent(
             sweepAngle = sweepAngle,
             useCenter = false,
             style = Stroke(
-                progressWidth.toPx(),
+                size.width * widthCoef,
                 cap = StrokeCap.Round,
                 miter = 0f
             )
@@ -111,7 +113,6 @@ fun RoundProgressContent(
 private fun RoundProgressWidgetPreview() {
     WidgetPreviewBox {
         RoundProgressWidget(
-            progressWidth = 30.dp,
             colors = listOf(AnimationsColor.Peach, AnimationsColor.LightPeach, AnimationsColor.Peach),
         )
     }

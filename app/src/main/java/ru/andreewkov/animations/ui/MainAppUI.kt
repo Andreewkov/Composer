@@ -28,6 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import ru.andreewkov.animations.ui.screen.Screen
 import ru.andreewkov.animations.ui.screen.RoundProgressScreenUI
 import ru.andreewkov.animations.ui.MainAppViewModel.ScreenState
+import ru.andreewkov.animations.ui.screen.RoundLoaderScreenUI
 import ru.andreewkov.animations.ui.theme.AnimationsColor
 import ru.andreewkov.animations.ui.utils.AnimationsPreview
 import ru.andreewkov.animations.ui.utils.Preview
@@ -38,6 +39,7 @@ fun MainAppUI(
 ) {
     val viewModel: MainAppViewModel = viewModel()
     val screenState by viewModel.screenState.collectAsState()
+    val currentScreen by viewModel.currentScreen.collectAsState()
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         val blurRadius by animateDpAsState(
@@ -52,7 +54,7 @@ fun MainAppUI(
 
         Scaffold(
             topBar = {
-                AppDar(screenState.currentScreen.title)
+                AppDar(currentScreen.title)
             },
             modifier = Modifier
                 .safeContentPadding()
@@ -61,14 +63,14 @@ fun MainAppUI(
         ) { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.Animation.id,
+                startDestination = Screen.getStartScreen().id,
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable(route = Screen.Animation.id) {
+                composable(route = Screen.RoundProgress.id) {
                     RoundProgressScreenUI()
                 }
-                composable(route = Screen.Animation2.id) {
-
+                composable(route = Screen.RoundLoader.id) {
+                    RoundLoaderScreenUI()
                 }
             }
         }

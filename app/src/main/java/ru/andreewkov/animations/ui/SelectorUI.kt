@@ -1,6 +1,5 @@
 package ru.andreewkov.animations.ui
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibilityScope
@@ -54,7 +53,7 @@ fun SelectorWidget(
 ) {
     val viewModel: MainAppViewModel = viewModel()
     val screenState by viewModel.screenState.collectAsState()
-    val currentScreen by remember { mutableStateOf(screenState.currentScreen) }
+    val currentScreen by viewModel.currentScreen.collectAsState()
 
     LaunchedEffect(currentScreen) {
         navController.navigate(currentScreen.id)
@@ -183,7 +182,6 @@ private fun SelectorExpandContent(
 private fun SelectorExpandPreview() {
     SelectorPreview(
         startState = MainAppViewModel.ScreenState.SelectorExpand(
-            currentScreen = Screen.getStartScreen(),
             isExpanded = false,
             items = Screen.getAll()),
         )
@@ -194,9 +192,7 @@ private fun SelectorExpandPreview() {
 private fun SelectorCompatPreview() {
     Preview {
         SelectorPreview(
-            startState = MainAppViewModel.ScreenState.SelectorCompact(
-                currentScreen = Screen.getStartScreen(),
-            )
+            startState = MainAppViewModel.ScreenState.SelectorCompact
         )
     }
 }
@@ -210,14 +206,13 @@ private fun SelectorPreview(
         SelectorContent(
             screenState = screenState,
             onItemClick = {
-                screenState = MainAppViewModel.ScreenState.SelectorCompact(Screen.getStartScreen())
+                screenState = MainAppViewModel.ScreenState.SelectorCompact
             },
             onOutsideClick = {
-                screenState = MainAppViewModel.ScreenState.SelectorCompact(Screen.getStartScreen())
+                screenState = MainAppViewModel.ScreenState.SelectorCompact
             },
             onSelectorClick = {
                 screenState = MainAppViewModel.ScreenState.SelectorExpand(
-                    currentScreen = Screen.getStartScreen(),
                     isExpanded = true,
                     items = Screen.getAll(),
                 )

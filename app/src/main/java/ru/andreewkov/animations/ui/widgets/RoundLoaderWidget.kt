@@ -1,7 +1,14 @@
 package ru.andreewkov.animations.ui.widgets
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
@@ -34,9 +41,21 @@ fun RoundLoaderWidget() {
 @Composable
 private fun Loader() {
     var size by remember { mutableStateOf(IntSize.Zero) }
+    val transition = rememberInfiniteTransition()
+    val rotation by transition.animateFloat(
+        initialValue = 30f,
+        targetValue = 0f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 600, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart,
+        ),
+        label = "rotation"
+    )
     Box(
         modifier = Modifier
+            .aspectRatio(1f)
             .fillMaxSize()
+            .rotate(rotation)
             .onSizeChanged {
                 size = it
             },
@@ -56,21 +75,21 @@ private fun Loader() {
 private fun LoaderItem(modifier: Modifier = Modifier) {
     Canvas(modifier = modifier.fillMaxSize()) {
         val path = Path().apply {
-            moveTo(size.width / 8f, 0f)
-            lineTo(size.width / 4, size.height)
-            lineTo(size.width - size.width / 9, size.height)
-            lineTo(size.width - size.width / 2.5f, 0f)
+            moveTo(size.width / 4, 0f)
+            lineTo(size.width / 2.7f, size.height)
+            lineTo(size.width - size.width / 2.7f, size.height)
+            lineTo(size.width - size.width / 4, 0f)
             close()
         }
         val paint =  Paint().apply {
             color = AnimationsColor.Peach
-            pathEffect = PathEffect.cornerPathEffect(60f)
+            pathEffect = PathEffect.cornerPathEffect(size.width / 6)
         }
 
         drawIntoCanvas { canvas ->
             canvas.drawOutline(
                 outline = Outline.Generic(path),
-                paint = paint
+                paint = paint,
             )
         }
     }

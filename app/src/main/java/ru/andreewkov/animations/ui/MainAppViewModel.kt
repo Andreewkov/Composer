@@ -11,12 +11,14 @@ class MainAppViewModel : ViewModel() {
 
     private val _screenState = MutableStateFlow(
         if (Screen.iaSelectorExpandOnStart()) {
-            ScreenState.SelectorExpand(Screen.getStartScreen(), isExpanded = false, Screen.getAll())
+            ScreenState.SelectorExpand(isExpanded = false, Screen.getAll())
         } else {
-            ScreenState.SelectorCompact(Screen.getStartScreen())
+            ScreenState.SelectorCompact
         }
     )
+    private val _currentScreen = MutableStateFlow<Screen>(Screen.getStartScreen())
     val screenState get() = _screenState.asStateFlow()
+    val currentScreen get() = _currentScreen.asStateFlow()
 
     fun isSelectorExpanded(): Boolean {
         val expandState = _screenState.value as? ScreenState.SelectorExpand ?: return false
@@ -24,15 +26,15 @@ class MainAppViewModel : ViewModel() {
     }
 
     fun onSelectorItemClick(id: ScreenId) {
-        _screenState.update {
-            ScreenState.SelectorCompact(currentScreen = Screen.findScreen(id))
+        _screenState.update { ScreenState.SelectorCompact }
+        if (currentScreen.value.id != id) {
+            _currentScreen.update { Screen.findScreen(id) }
         }
     }
 
     fun onSelectorClick() {
         _screenState.update {
             ScreenState.SelectorExpand(
-                currentScreen = screenState.value.currentScreen,
                 isExpanded = true,
                 items = Screen.getAll(),
             )
@@ -43,7 +45,7 @@ class MainAppViewModel : ViewModel() {
         return when (_screenState.value) {
             is ScreenState.SelectorExpand -> {
                 _screenState.update {
-                    ScreenState.SelectorCompact(currentScreen = screenState.value.currentScreen)
+                    ScreenState.SelectorCompact
                 }
                 true
             }
@@ -53,14 +55,9 @@ class MainAppViewModel : ViewModel() {
 
     sealed class ScreenState {
 
-        abstract val currentScreen: Screen
-
-        data class SelectorCompact(
-            override val currentScreen: Screen,
-        ) : ScreenState()
+        data object SelectorCompact: ScreenState()
 
         data class SelectorExpand(
-            override val currentScreen: Screen,
             val isExpanded: Boolean,
             val items: List<Screen>,
         ) : ScreenState()
