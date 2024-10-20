@@ -33,6 +33,9 @@ import ru.andreewkov.animations.ui.theme.AnimationsColor
 import ru.andreewkov.animations.ui.utils.AnimationsPreview
 import ru.andreewkov.animations.ui.utils.Preview
 
+private const val BLUR_COMPACT_DP = 0
+private const val BLUR_EXPAND_DP = 50
+
 @Composable
 fun MainAppUI(
     navController: NavHostController = rememberNavController()
@@ -44,9 +47,9 @@ fun MainAppUI(
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         val blurRadius by animateDpAsState(
             targetValue = if (screenState is ScreenState.SelectorExpand) {
-                30.dp
+                BLUR_EXPAND_DP.dp
             } else {
-                0.dp
+                BLUR_COMPACT_DP.dp
             },
             animationSpec = tween(durationMillis = 400),
             label = "blur_radius",

@@ -43,7 +43,7 @@ private fun Loader() {
     var size by remember { mutableStateOf(IntSize.Zero) }
     val transition = rememberInfiniteTransition()
     val rotation by transition.animateFloat(
-        initialValue = 30f,
+        initialValue = 40f,
         targetValue = 0f,
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 600, easing = LinearEasing),
@@ -61,11 +61,11 @@ private fun Loader() {
             },
         contentAlignment = Alignment.Center,
     ) {
-        for (i: Int in 0..11) {
+        for (i: Int in 0..8) {
             LoaderItem(modifier = Modifier
+                .rotate(40f * i)
                 .size(size.width.dp / 12)
-                .rotate(30f * i)
-                .offset(y = -size.height.dp / 8)
+                .offset(y = -size.width.dp / 8)
             )
         }
     }
