@@ -12,8 +12,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
@@ -24,14 +27,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import ru.andreewkov.animations.ui.screen.Screen
-import ru.andreewkov.animations.ui.screen.RoundProgressScreenUI
-import ru.andreewkov.animations.ui.MainAppViewModel.ScreenState
 import ru.andreewkov.animations.ui.screen.RoundLoaderScreenUI
+import ru.andreewkov.animations.ui.screen.RoundProgressScreenUI
+import ru.andreewkov.animations.ui.screen.Screen
 import ru.andreewkov.animations.ui.theme.AnimationsColor
 import ru.andreewkov.animations.ui.utils.AnimationsPreview
 import ru.andreewkov.animations.ui.utils.Preview
+import ru.andreewkov.animations.ui.utils.observe
 
 private const val BLUR_COMPACT_DP = 0
 private const val BLUR_EXPAND_DP = 50
@@ -41,12 +45,21 @@ fun MainAppUI(
     navController: NavHostController = rememberNavController()
 ) {
     val viewModel: MainAppViewModel = viewModel()
-    val screenState by viewModel.screenState.collectAsState()
-    val currentScreen by viewModel.currentScreen.collectAsState()
+    val selectorState by viewModel.selectorState.collectAsState()
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute by remember { derivedStateOf { backStackEntry?.destination?.route } }
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationScreenId.observe { id ->
+            if (currentRoute != id) {
+                navController.navigate(id)
+            }
+        }
+    }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         val blurRadius by animateDpAsState(
-            targetValue = if (screenState is ScreenState.SelectorExpand) {
+            targetValue = if (selectorState.isExpand()) {
                 BLUR_EXPAND_DP.dp
             } else {
                 BLUR_COMPACT_DP.dp
@@ -57,7 +70,7 @@ fun MainAppUI(
 
         Scaffold(
             topBar = {
-                AppDar(currentScreen.title)
+                AppDar(Screen.findScreen(currentRoute).title)
             },
             modifier = Modifier
                 .safeContentPadding()
@@ -78,7 +91,6 @@ fun MainAppUI(
             }
         }
         SelectorWidget(
-            navController = navController,
             modifier = Modifier.padding(innerPadding)
         )
     }

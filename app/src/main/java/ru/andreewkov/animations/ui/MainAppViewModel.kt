@@ -1,65 +1,66 @@
 package ru.andreewkov.animations.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import ru.andreewkov.animations.ui.screen.Screen
 import ru.andreewkov.animations.ui.screen.ScreenId
 
 class MainAppViewModel : ViewModel() {
 
-    private val _screenState = MutableStateFlow(
+    private val _selectorState = MutableStateFlow(
         if (Screen.iaSelectorExpandOnStart()) {
-            ScreenState.SelectorExpand(isExpanded = false, Screen.getAll())
+            SelectorState.Expand(Screen.getAll(), isExpandedFromCompact = false,)
         } else {
-            ScreenState.SelectorCompact
+            SelectorState.Compact
         }
     )
-    private val _currentScreen = MutableStateFlow<Screen>(Screen.getStartScreen())
-    val screenState get() = _screenState.asStateFlow()
-    val currentScreen get() = _currentScreen.asStateFlow()
-
-    fun isSelectorExpanded(): Boolean {
-        val expandState = _screenState.value as? ScreenState.SelectorExpand ?: return false
-        return expandState.isExpanded
-    }
+    private val _navigationScreenId = MutableSharedFlow<String>()
+    val selectorState get() = _selectorState.asStateFlow()
+    val navigationScreenId get() = _navigationScreenId.asSharedFlow()
 
     fun onSelectorItemClick(id: ScreenId) {
-        _screenState.update { ScreenState.SelectorCompact }
-        if (currentScreen.value.id != id) {
-            _currentScreen.update { Screen.findScreen(id) }
+        _selectorState.update { SelectorState.Compact }
+        viewModelScope.launch {
+            _navigationScreenId.emit(id)
         }
     }
 
     fun onSelectorClick() {
-        _screenState.update {
-            ScreenState.SelectorExpand(
-                isExpanded = true,
+        _selectorState.update {
+            SelectorState.Expand(
                 items = Screen.getAll(),
+                isExpandedFromCompact = true,
             )
         }
     }
 
     fun onBackClick(): Boolean {
-        return when (_screenState.value) {
-            is ScreenState.SelectorExpand -> {
-                _screenState.update {
-                    ScreenState.SelectorCompact
-                }
-                true
+        val isExpand = selectorState.value.isExpand()
+        if (isExpand) {
+            _selectorState.update {
+                SelectorState.Compact
             }
-            is ScreenState.SelectorCompact -> false
         }
+        return isExpand
     }
 
-    sealed class ScreenState {
+    sealed class SelectorState {
 
-        data object SelectorCompact: ScreenState()
+        data object Compact: SelectorState()
 
-        data class SelectorExpand(
-            val isExpanded: Boolean,
+        data class Expand(
             val items: List<Screen>,
-        ) : ScreenState()
+            val isExpandedFromCompact: Boolean,
+        ) : SelectorState()
+
+        fun isExpand() = this is Expand
+
+        fun isExpandFromCompact() = this is Expand && isExpandedFromCompact
     }
 }

@@ -21,17 +21,15 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import ru.andreewkov.animations.ui.screen.Screen
 import ru.andreewkov.animations.ui.screen.ScreenId
 import ru.andreewkov.animations.ui.selector.CircleState
@@ -45,45 +43,37 @@ import ru.andreewkov.animations.ui.utils.Preview
 private typealias OnSelectorClick = () -> Unit
 private typealias OnItemClick = (ScreenId) -> Unit
 private typealias OnOutsideClick = () -> Unit
+private typealias OnBackClick = () -> Unit
 
 @Composable
-fun SelectorWidget(
-    navController: NavController,
-    modifier: Modifier = Modifier,
-) {
+fun SelectorWidget(modifier: Modifier = Modifier) {
     val viewModel: MainAppViewModel = viewModel()
-    val screenState by viewModel.screenState.collectAsState()
-    val currentScreen by viewModel.currentScreen.collectAsState()
-
-    LaunchedEffect(currentScreen) {
-        navController.navigate(currentScreen.id)
-    }
-
-    BackHandler(enabled = screenState is MainAppViewModel.ScreenState.SelectorExpand) {
-        viewModel.onBackClick()
-    }
 
     SelectorContent(
-        screenState = screenState,
-        onItemClick = viewModel::onSelectorItemClick,
-        onOutsideClick = viewModel::onBackClick,
-        onSelectorClick = viewModel::onSelectorClick,
+        selectorStateFlow = viewModel.selectorState,
         modifier = modifier,
+        onItemClick = viewModel::onSelectorItemClick,
+        onBackClick = viewModel::onBackClick,
+        onSelectorClick = viewModel::onSelectorClick,
     )
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun SelectorContent(
-    screenState: MainAppViewModel.ScreenState,
+    selectorStateFlow: StateFlow<MainAppViewModel.SelectorState>,
     modifier: Modifier = Modifier,
     onItemClick: OnItemClick = { },
-    onOutsideClick: OnOutsideClick = { },
+    onBackClick: OnBackClick = { },
     onSelectorClick: OnSelectorClick = { },
 ) {
-    val viewModel: MainAppViewModel = viewModel()
+    val selectorState by selectorStateFlow.collectAsState()
+    BackHandler(enabled = selectorState is MainAppViewModel.SelectorState.Expand) {
+        onBackClick()
+    }
+
     val animator = remember {
-        val state = if (viewModel.isSelectorExpanded()) {
+        val state = if (selectorState.isExpandFromCompact()) {
             CircleState.Open
         } else {
             CircleState.Hide
@@ -92,23 +82,23 @@ private fun SelectorContent(
     }
     SharedTransitionLayout {
         AnimatedContent(
-            targetState = screenState,
+            targetState = selectorState,
             label = "selector",
         ) { targetState ->
             Box(modifier = modifier.fillMaxSize()) {
                 when (targetState) {
-                    is MainAppViewModel.ScreenState.SelectorCompact -> {
+                    is MainAppViewModel.SelectorState.Compact -> {
                         animator.hideCircles()
                         SelectorCompactContent(
                             onSelectorClick = onSelectorClick,
                         )
                     }
 
-                    is MainAppViewModel.ScreenState.SelectorExpand -> {
+                    is MainAppViewModel.SelectorState.Expand -> {
                         SelectorExpandContent(
                             onItemClick = onItemClick,
                             items = Screen.getAll(),
-                            onOutsideClick = onOutsideClick,
+                            onOutsideClick = onBackClick,
                             animator = animator,
                         )
                     }
@@ -181,8 +171,8 @@ private fun SelectorExpandContent(
 @Composable
 private fun SelectorExpandPreview() {
     SelectorPreview(
-        startState = MainAppViewModel.ScreenState.SelectorExpand(
-            isExpanded = false,
+        startState = MainAppViewModel.SelectorState.Expand(
+            isExpandedFromCompact = false,
             items = Screen.getAll()),
         )
 }
@@ -192,28 +182,28 @@ private fun SelectorExpandPreview() {
 private fun SelectorCompatPreview() {
     Preview {
         SelectorPreview(
-            startState = MainAppViewModel.ScreenState.SelectorCompact
+            startState = MainAppViewModel.SelectorState.Compact
         )
     }
 }
 
 @Composable
 private fun SelectorPreview(
-    startState: MainAppViewModel.ScreenState,
+    startState: MainAppViewModel.SelectorState,
 ) {
-    var screenState by remember { mutableStateOf(startState) }
+    val selectorState = MutableStateFlow(startState)
     Preview {
         SelectorContent(
-            screenState = screenState,
+            selectorStateFlow = selectorState,
             onItemClick = {
-                screenState = MainAppViewModel.ScreenState.SelectorCompact
+                selectorState.value = MainAppViewModel.SelectorState.Compact
             },
-            onOutsideClick = {
-                screenState = MainAppViewModel.ScreenState.SelectorCompact
+            onBackClick = {
+                selectorState.value = MainAppViewModel.SelectorState.Compact
             },
             onSelectorClick = {
-                screenState = MainAppViewModel.ScreenState.SelectorExpand(
-                    isExpanded = true,
+                selectorState.value = MainAppViewModel.SelectorState.Expand(
+                    isExpandedFromCompact = true,
                     items = Screen.getAll(),
                 )
             }
