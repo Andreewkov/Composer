@@ -5,7 +5,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -73,7 +72,6 @@ fun MainAppUI(
                 AppDar(Screen.findScreen(currentRoute).title)
             },
             modifier = Modifier
-                .safeContentPadding()
                 .fillMaxSize()
                 .blur(radius = blurRadius, edgeTreatment = BlurredEdgeTreatment.Unbounded),
         ) { innerPadding ->
@@ -110,7 +108,7 @@ private fun AppDar(title: String) {
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Transparent,
-        )
+        ),
     )
 }
 

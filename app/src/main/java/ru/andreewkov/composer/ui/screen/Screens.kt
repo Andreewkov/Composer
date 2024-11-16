@@ -16,9 +16,7 @@ import ru.andreewkov.composer.ui.widgets.RoundProgressWidget
 @Composable
 fun RoundProgressScreenUI() {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(50.dp),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
         RoundProgressWidget(
@@ -31,12 +29,13 @@ fun RoundProgressScreenUI() {
 @Composable
 fun RoundLoaderScreenUI() {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(50.dp),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        RoundLoaderWidget()
+        RoundLoaderWidget(
+            itemCount = 12,
+            color = AppColor.Peach,
+        )
     }
 }
 
