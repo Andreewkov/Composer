@@ -1,4 +1,4 @@
-package ru.andreewkov.animations.ui
+package ru.andreewkov.composer.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.andreewkov.animations.ui.screen.Screen
-import ru.andreewkov.animations.ui.screen.ScreenId
+import ru.andreewkov.composer.ui.screen.Screen
+import ru.andreewkov.composer.ui.screen.ScreenId
 
 class MainAppViewModel : ViewModel() {
 

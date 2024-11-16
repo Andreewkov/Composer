@@ -1,4 +1,4 @@
-package ru.andreewkov.animations.ui.selector
+package ru.andreewkov.composer.ui.selector
 
 import android.content.res.Configuration
 import androidx.annotation.DrawableRes
@@ -57,10 +57,10 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import ru.andreewkov.animations.ui.screen.ScreenId
-import ru.andreewkov.animations.ui.theme.AnimationsColor
-import ru.andreewkov.animations.ui.utils.AnimationScopePreview
-import ru.andreewkov.animations.ui.utils.AnimationsPreview
+import ru.andreewkov.composer.ui.screen.ScreenId
+import ru.andreewkov.composer.ui.theme.AppColor
+import ru.andreewkov.composer.ui.utils.AnimationScopePreview
+import ru.andreewkov.composer.ui.utils.ComposerPreview
 import kotlin.math.PI
 import kotlin.math.max
 import kotlin.math.sin
@@ -339,13 +339,13 @@ private fun Circle(
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
-@AnimationsPreview
+@ComposerPreview
 @Composable
 private fun RoundSelectorWidgetPreview() {
     AnimationScopePreview {
         RoundSelectorWidget(
-            centerColor = AnimationsColor.Peach,
-            items = generateCircleItems(9, AnimationsColor.LightPeach),
+            centerColor = AppColor.Peach,
+            items = generateCircleItems(9, AppColor.LightPeach),
             minCount = 12,
             onItemClick = { },
             onOutsideClick = { },

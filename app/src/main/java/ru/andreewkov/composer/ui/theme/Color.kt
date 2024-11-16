@@ -1,8 +1,8 @@
-package ru.andreewkov.animations.ui.theme
+package ru.andreewkov.composer.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-object AnimationsColor {
+object AppColor {
     val Purple40 = Color(0xFF6650a4)
     val PurpleGrey40 = Color(0xFF625b71)
     val Pink40 = Color(0xFF7D5260)

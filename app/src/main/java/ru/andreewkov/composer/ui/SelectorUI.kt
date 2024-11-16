@@ -1,4 +1,4 @@
-package ru.andreewkov.animations.ui
+package ru.andreewkov.composer.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
@@ -30,15 +30,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import ru.andreewkov.animations.ui.screen.Screen
-import ru.andreewkov.animations.ui.screen.ScreenId
-import ru.andreewkov.animations.ui.selector.CircleState
-import ru.andreewkov.animations.ui.selector.RoundSelectorAnimator
-import ru.andreewkov.animations.ui.selector.RoundSelectorWidget
-import ru.andreewkov.animations.ui.selector.mapToCircleItems
-import ru.andreewkov.animations.ui.theme.AnimationsColor
-import ru.andreewkov.animations.ui.utils.AnimationsPreview
-import ru.andreewkov.animations.ui.utils.Preview
+import ru.andreewkov.composer.ui.screen.Screen
+import ru.andreewkov.composer.ui.screen.ScreenId
+import ru.andreewkov.composer.ui.selector.CircleState
+import ru.andreewkov.composer.ui.selector.RoundSelectorAnimator
+import ru.andreewkov.composer.ui.selector.RoundSelectorWidget
+import ru.andreewkov.composer.ui.selector.mapToCircleItems
+import ru.andreewkov.composer.ui.theme.AppColor
+import ru.andreewkov.composer.ui.utils.ComposerPreview
+import ru.andreewkov.composer.ui.utils.Preview
 
 private typealias OnSelectorClick = () -> Unit
 private typealias OnItemClick = (ScreenId) -> Unit
@@ -124,7 +124,7 @@ private fun BoxScope.SelectorCompactContent(
     FloatingActionButton(
         onClick = onSelectorClick,
         shape = CircleShape,
-        containerColor = AnimationsColor.Peach,
+        containerColor = AppColor.Peach,
         modifier = Modifier
             .align(Alignment.BottomStart)
             .padding(all = 32.dp)
@@ -157,7 +157,7 @@ private fun SelectorExpandContent(
     modifier: Modifier = Modifier,
 ) {
     RoundSelectorWidget(
-        centerColor = AnimationsColor.Peach,
+        centerColor = AppColor.Peach,
         items = items.mapToCircleItems(),
         minCount = 10,
         onItemClick = onItemClick,
@@ -167,7 +167,7 @@ private fun SelectorExpandContent(
     )
 }
 
-@AnimationsPreview
+@ComposerPreview
 @Composable
 private fun SelectorExpandPreview() {
     SelectorPreview(
@@ -177,7 +177,7 @@ private fun SelectorExpandPreview() {
         )
 }
 
-@AnimationsPreview
+@ComposerPreview
 @Composable
 private fun SelectorCompatPreview() {
     Preview {

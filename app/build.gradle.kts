@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "ru.andreewkov.animations"
+    namespace = "ru.andreewkov.composer"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "ru.andreewkov.animations"
+        applicationId = "ru.andreewkov.compooser"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

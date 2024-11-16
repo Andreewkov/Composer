@@ -1,4 +1,4 @@
-package ru.andreewkov.animations.ui.widgets
+package ru.andreewkov.composer.ui.widgets
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -31,8 +31,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import ru.andreewkov.animations.ui.theme.AnimationsColor
-import ru.andreewkov.animations.ui.utils.WidgetPreviewBox
+import ru.andreewkov.composer.ui.theme.AppColor
+import ru.andreewkov.composer.ui.utils.WidgetPreviewBox
 
 private const val ROUND_PROGRESS_DEFAULT_DURATION = 1400
 private const val PROGRESS_WIDTH_COEFFICIENT = 0.2f
@@ -118,7 +118,7 @@ fun RoundProgressContent(
 private fun RoundProgressWidgetPreview() {
     WidgetPreviewBox {
         RoundProgressWidget(
-            colors = listOf(AnimationsColor.Peach, AnimationsColor.LightPeach, AnimationsColor.Peach),
+            colors = listOf(AppColor.Peach, AppColor.LightPeach, AppColor.Peach),
         )
     }
 }

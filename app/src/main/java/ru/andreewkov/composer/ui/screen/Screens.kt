@@ -1,4 +1,4 @@
-package ru.andreewkov.animations.ui.screen
+package ru.andreewkov.composer.ui.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,11 +7,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ru.andreewkov.animations.ui.theme.AnimationsColor
-import ru.andreewkov.animations.ui.utils.AnimationsPreview
-import ru.andreewkov.animations.ui.utils.Preview
-import ru.andreewkov.animations.ui.widgets.RoundLoaderWidget
-import ru.andreewkov.animations.ui.widgets.RoundProgressWidget
+import ru.andreewkov.composer.ui.theme.AppColor
+import ru.andreewkov.composer.ui.utils.ComposerPreview
+import ru.andreewkov.composer.ui.utils.Preview
+import ru.andreewkov.composer.ui.widgets.RoundLoaderWidget
+import ru.andreewkov.composer.ui.widgets.RoundProgressWidget
 
 @Composable
 fun RoundProgressScreenUI() {
@@ -22,7 +22,7 @@ fun RoundProgressScreenUI() {
         contentAlignment = Alignment.Center,
     ) {
         RoundProgressWidget(
-            colors = listOf(AnimationsColor.Peach, AnimationsColor.LightPeach, AnimationsColor.Peach),
+            colors = listOf(AppColor.Peach, AppColor.LightPeach, AppColor.Peach),
             duration = 1400,
         )
     }
@@ -40,7 +40,7 @@ fun RoundLoaderScreenUI() {
     }
 }
 
-@AnimationsPreview
+@ComposerPreview
 @Composable
 private fun RoundProgressScreenUIPreview() {
     Preview {
@@ -48,7 +48,7 @@ private fun RoundProgressScreenUIPreview() {
     }
 }
 
-@AnimationsPreview
+@ComposerPreview
 @Composable
 private fun RoundLoaderScreenUIPreview() {
     Preview {

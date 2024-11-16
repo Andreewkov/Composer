@@ -1,4 +1,4 @@
-package ru.andreewkov.animations.ui.utils
+package ru.andreewkov.composer.ui.utils
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow

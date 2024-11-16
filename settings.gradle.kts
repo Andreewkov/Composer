@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Animations"
+rootProject.name = "Composer"
 include(":app")

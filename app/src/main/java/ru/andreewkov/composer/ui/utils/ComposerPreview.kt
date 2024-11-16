@@ -1,4 +1,4 @@
-package ru.andreewkov.animations.ui.utils
+package ru.andreewkov.composer.ui.utils
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibilityScope
@@ -14,8 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.andreewkov.animations.ui.theme.AnimationsColor
-import ru.andreewkov.animations.ui.theme.AnimationsTheme
+import ru.andreewkov.composer.ui.theme.AppColor
+import ru.andreewkov.composer.ui.theme.ComposerTheme
 
 @Preview(
     device = "spec:width=411dp,height=891dp,dpi=420,orientation=portrait",
@@ -23,15 +23,15 @@ import ru.andreewkov.animations.ui.theme.AnimationsTheme
 @Preview(
     device = "spec:width=891dp,height=411dp,dpi=420,orientation=landscape",
 )
-annotation class AnimationsPreview
+annotation class ComposerPreview
 
 @Composable
 fun Preview(content: @Composable BoxScope.() -> Unit) {
-    AnimationsTheme {
+    ComposerTheme {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(AnimationsColor.Dark)
+                .background(AppColor.Dark)
         ) {
             content()
         }
@@ -43,14 +43,14 @@ fun Preview(content: @Composable BoxScope.() -> Unit) {
 fun AnimationScopePreview(
     content: @Composable context(SharedTransitionScope, AnimatedVisibilityScope, BoxScope) () -> Unit,
 ) {
-    AnimationsTheme {
+    ComposerTheme {
         SharedTransitionLayout {
             AnimatedContent(targetState = true) { targetState ->
                 if (targetState) {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(AnimationsColor.Dark)
+                            .background(AppColor.Dark)
                     ) {
                         content(
                             this@SharedTransitionLayout,

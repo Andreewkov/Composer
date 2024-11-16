@@ -1,4 +1,4 @@
-package ru.andreewkov.animations.ui
+package ru.andreewkov.composer.ui
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -29,13 +29,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import ru.andreewkov.animations.ui.screen.RoundLoaderScreenUI
-import ru.andreewkov.animations.ui.screen.RoundProgressScreenUI
-import ru.andreewkov.animations.ui.screen.Screen
-import ru.andreewkov.animations.ui.theme.AnimationsColor
-import ru.andreewkov.animations.ui.utils.AnimationsPreview
-import ru.andreewkov.animations.ui.utils.Preview
-import ru.andreewkov.animations.ui.utils.observe
+import ru.andreewkov.composer.ui.screen.RoundLoaderScreenUI
+import ru.andreewkov.composer.ui.screen.RoundProgressScreenUI
+import ru.andreewkov.composer.ui.screen.Screen
+import ru.andreewkov.composer.ui.theme.AppColor
+import ru.andreewkov.composer.ui.utils.ComposerPreview
+import ru.andreewkov.composer.ui.utils.Preview
+import ru.andreewkov.composer.ui.utils.observe
 
 private const val BLUR_COMPACT_DP = 0
 private const val BLUR_EXPAND_DP = 50
@@ -103,7 +103,7 @@ private fun AppDar(title: String) {
         title = {
             Text(
                 text = title,
-                color = AnimationsColor.Peach,
+                color = AppColor.Peach,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -114,7 +114,7 @@ private fun AppDar(title: String) {
     )
 }
 
-@AnimationsPreview
+@ComposerPreview
 @Composable
 private fun MainScreenPreview() {
     Preview {

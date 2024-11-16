@@ -1,4 +1,4 @@
-package ru.andreewkov.animations.ui.selector
+package ru.andreewkov.composer.ui.selector
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

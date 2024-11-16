@@ -1,4 +1,4 @@
-package ru.andreewkov.animations.ui.theme
+package ru.andreewkov.composer.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

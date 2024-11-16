@@ -1,9 +1,9 @@
-package ru.andreewkov.animations.ui.selector
+package ru.andreewkov.composer.ui.selector
 
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color
-import ru.andreewkov.animations.R
-import ru.andreewkov.animations.ui.screen.Screen
+import ru.andreewkov.composer.R
+import ru.andreewkov.composer.ui.screen.Screen
 import kotlin.random.Random
 
 data class CircleItem(

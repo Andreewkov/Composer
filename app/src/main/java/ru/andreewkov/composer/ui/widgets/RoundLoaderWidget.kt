@@ -1,4 +1,4 @@
-package ru.andreewkov.animations.ui.widgets
+package ru.andreewkov.composer.ui.widgets
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -30,8 +30,8 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import ru.andreewkov.animations.ui.theme.AnimationsColor
-import ru.andreewkov.animations.ui.utils.WidgetPreviewBox
+import ru.andreewkov.composer.ui.theme.AppColor
+import ru.andreewkov.composer.ui.utils.WidgetPreviewBox
 
 @Composable
 fun RoundLoaderWidget() {
@@ -82,7 +82,7 @@ private fun LoaderItem(modifier: Modifier = Modifier) {
             close()
         }
         val paint =  Paint().apply {
-            color = AnimationsColor.Peach
+            color = AppColor.Peach
             pathEffect = PathEffect.cornerPathEffect(size.width / 6)
         }
 

@@ -1,9 +1,9 @@
-package ru.andreewkov.animations.ui.screen
+package ru.andreewkov.composer.ui.screen
 
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color
-import ru.andreewkov.animations.R
-import ru.andreewkov.animations.ui.theme.AnimationsColor
+import ru.andreewkov.composer.R
+import ru.andreewkov.composer.ui.theme.AppColor
 
 typealias ScreenId = String
 
@@ -18,7 +18,7 @@ sealed class Screen(
         title = "Round Progress",
         selectorStyle = SelectorStyle(
             icon = R.drawable.ic_play,
-            color = AnimationsColor.LightPeach,
+            color = AppColor.LightPeach,
         )
     )
 
@@ -27,7 +27,7 @@ sealed class Screen(
         title = "Round Loader",
         selectorStyle = SelectorStyle(
             icon = R.drawable.ic_globe,
-            color = AnimationsColor.LightPeach,
+            color = AppColor.LightPeach,
         )
     )
 

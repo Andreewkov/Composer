@@ -1,4 +1,4 @@
-package ru.andreewkov.animations
+package ru.andreewkov.composer
 
 import org.junit.Test
 

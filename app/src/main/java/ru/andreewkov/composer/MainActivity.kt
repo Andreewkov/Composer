@@ -1,12 +1,12 @@
-package ru.andreewkov.animations
+package ru.andreewkov.composer
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import ru.andreewkov.animations.ui.MainAppUI
-import ru.andreewkov.animations.ui.theme.AnimationsTheme
+import ru.andreewkov.composer.ui.MainAppUI
+import ru.andreewkov.composer.ui.theme.ComposerTheme
 
 
 class MainActivity : ComponentActivity() {
@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         )
 
         setContent {
-            AnimationsTheme {
+            ComposerTheme {
                 MainAppUI()
             }
         }
