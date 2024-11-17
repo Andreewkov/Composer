@@ -12,6 +12,7 @@ import ru.andreewkov.composer.ui.utils.ComposerPreview
 import ru.andreewkov.composer.ui.utils.Preview
 import ru.andreewkov.composer.ui.widgets.RoundLoaderWidget
 import ru.andreewkov.composer.ui.widgets.RoundProgressWidget
+import ru.andreewkov.composer.ui.widgets.SliderWidget
 
 @Composable
 fun RoundProgressScreenUI() {
@@ -39,6 +40,16 @@ fun RoundLoaderScreenUI() {
     }
 }
 
+@Composable
+fun SliderScreenUI() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+
+    }
+}
+
 @ComposerPreview
 @Composable
 private fun RoundProgressScreenUIPreview() {
@@ -52,5 +63,13 @@ private fun RoundProgressScreenUIPreview() {
 private fun RoundLoaderScreenUIPreview() {
     Preview {
         RoundLoaderScreenUI()
+    }
+}
+
+@ComposerPreview
+@Composable
+private fun SliderScreenUIPreview() {
+    Preview {
+        SliderScreenUI()
     }
 }

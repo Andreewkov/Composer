@@ -31,6 +31,15 @@ sealed class Screen(
         )
     )
 
+    data object Slider : Screen(
+        id = "slider",
+        title = "Slider",
+        selectorStyle = SelectorStyle(
+            icon = R.drawable.ic_cross,
+            color = AppColor.LightPeach,
+        )
+    )
+
     companion object {
 
         fun getStartScreen() = RoundProgress
@@ -44,6 +53,7 @@ sealed class Screen(
         fun getAll() = listOf(
             RoundProgress,
             RoundLoader,
+            Slider,
         )
     }
 }

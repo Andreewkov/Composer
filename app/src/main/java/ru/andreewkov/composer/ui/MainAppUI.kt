@@ -31,6 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import ru.andreewkov.composer.ui.screen.RoundLoaderScreenUI
 import ru.andreewkov.composer.ui.screen.RoundProgressScreenUI
 import ru.andreewkov.composer.ui.screen.Screen
+import ru.andreewkov.composer.ui.screen.SliderScreenUI
 import ru.andreewkov.composer.ui.theme.AppColor
 import ru.andreewkov.composer.ui.utils.ComposerPreview
 import ru.andreewkov.composer.ui.utils.Preview
@@ -85,6 +86,9 @@ fun MainAppUI(
                 }
                 composable(route = Screen.RoundLoader.id) {
                     RoundLoaderScreenUI()
+                }
+                composable(route = Screen.Slider.id) {
+                    SliderScreenUI()
                 }
             }
         }
