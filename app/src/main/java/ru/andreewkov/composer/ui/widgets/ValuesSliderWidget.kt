@@ -4,9 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import ru.andreewkov.composer.ui.slider.SliderWidget
 import ru.andreewkov.composer.ui.slider.ValuesSliderManager
-import ru.andreewkov.composer.ui.slider.calculateProgress
 import ru.andreewkov.composer.ui.theme.AppColor
 
 @Composable
@@ -26,14 +24,13 @@ fun ValuesSliderWidget(
         )
     }
 
-    TitledWidget(title, AppColor.Peach) {
+    TitledWidget(title, AppColor.Peach, modifier) {
         SliderWidget(
             nonActiveProgress = nonActiveProgress,
             backgroundColor = AppColor.Peach_a6,
             progressColor = AppColor.LightPeach,
             indicatorColor = AppColor.DarkPeach,
             manager = manager,
-            modifier = modifier,
             onValueChanged = onValueChanged,
         )
     }

@@ -14,14 +14,15 @@ import androidx.compose.ui.unit.sp
 fun TitledWidget(
     text: String,
     color: Color,
+    modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    Column {
+    Column(modifier = modifier) {
         Text(
             text = text,
             color = color,
             fontSize = 14.sp,
-            modifier = Modifier.padding(horizontal = 20.dp)
+            modifier = Modifier.padding(horizontal = 15.dp)
         )
         content()
     }

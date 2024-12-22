@@ -1,4 +1,4 @@
-package ru.andreewkov.composer.ui.slider
+package ru.andreewkov.composer.ui.widgets
 
 import androidx.annotation.FloatRange
 import androidx.compose.animation.core.Animatable
@@ -46,9 +46,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
+import ru.andreewkov.composer.ui.slider.SliderManager
 import ru.andreewkov.composer.ui.theme.AppColor
-import ru.andreewkov.composer.ui.widgets.ProgressSliderWidget
-import ru.andreewkov.composer.ui.widgets.ValuesSliderWidget
 
 @Composable
 fun <T> SliderWidget(
@@ -84,7 +83,6 @@ fun <T> SliderWidget(
             progressColor = progressColor,
             progress = progress.value,
             modifier = Modifier
-                .align(Alignment.BottomStart)
                 .padding(
                     vertical = 10.dp,
                     horizontal = 15.dp,
@@ -103,6 +101,7 @@ fun <T> SliderWidget(
                         makeCutoff(position.toFloat())
                     }
                 }
+                .align(Alignment.BottomStart)
         )
         IndicatorTrack(
             color = indicatorColor,

@@ -5,7 +5,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import ru.andreewkov.composer.ui.slider.ProgressSliderManager
-import ru.andreewkov.composer.ui.slider.SliderWidget
 import ru.andreewkov.composer.ui.theme.AppColor
 
 @Composable
@@ -16,14 +15,13 @@ fun ProgressSliderWidget(
     onProgressChanged: (Float) -> Unit = { },
 ) {
     val manager = remember { ProgressSliderManager() }
-    TitledWidget(title, AppColor.Peach){
+    TitledWidget(title, AppColor.Peach, modifier){
         SliderWidget(
             nonActiveProgress = progress,
             backgroundColor = AppColor.Peach_a6,
             progressColor = AppColor.LightPeach,
             indicatorColor = AppColor.DarkPeach,
             manager = manager,
-            modifier = modifier,
             onValueChanged = onProgressChanged,
         )
     }
@@ -31,7 +29,7 @@ fun ProgressSliderWidget(
 
 @Composable
 @Preview
-private fun SliderWidgetPreview() {
+private fun ProgressSliderWidgetPreview() {
     ProgressSliderWidget(
         title = "Скорость:",
         progress = 0.3f,

@@ -17,7 +17,7 @@ sealed class Screen(
         id = "round_progress",
         title = "Round Progress",
         selectorStyle = SelectorStyle(
-            icon = R.drawable.ic_play,
+            icon = R.drawable.ic_round_progress,
             color = AppColor.LightPeach,
         )
     )
@@ -26,7 +26,7 @@ sealed class Screen(
         id = "round_loader",
         title = "Round Loader",
         selectorStyle = SelectorStyle(
-            icon = R.drawable.ic_globe,
+            icon = R.drawable.ic_round_loader,
             color = AppColor.LightPeach,
         )
     )
