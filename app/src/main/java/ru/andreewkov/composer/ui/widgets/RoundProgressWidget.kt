@@ -1,6 +1,7 @@
 package ru.andreewkov.composer.ui.widgets
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween
@@ -25,13 +26,16 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import ru.andreewkov.composer.ui.theme.AppColor
 import ru.andreewkov.composer.ui.utils.WidgetPreviewBox
+import kotlin.math.PI
 import kotlin.math.roundToInt
+import kotlin.math.sin
 
 private const val ROUND_PROGRESS_DEFAULT_DURATION = 2800
 private const val PROGRESS_WIDTH_COEFFICIENT = 0.2f
 private const val PROGRESS_PADDING_COEFFICIENT = 0.2f
 private const val CIRCLE_DEGREES = 360F
 private const val SWEEP = 360f
+private const val MIN_SPEED = 0.05f
 
 @Composable
 fun RoundProgressWidget(
@@ -44,22 +48,15 @@ fun RoundProgressWidget(
     val rotateAnimatable = remember { Animatable(0f) }
 
     LaunchedEffect(speed) {
-        if (speed < 0.05f) {
+        if (speed < MIN_SPEED) {
             rotateAnimatable.stop()
         } else {
             if (!rotateAnimatable.isRunning) {
-                rotateAnimatable.run { }
-            }
-            rotateAnimatable.animateTo(
-                targetValue = CIRCLE_DEGREES + lastRotate,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(
-                        durationMillis = ((1 - (speed * speed - 0.01f)) * ROUND_PROGRESS_DEFAULT_DURATION).roundToInt(),
-                        easing = LinearEasing,
-                    )
+                rotateAnimatable.runCircleAnimation(
+                    speed = speed,
+                    lastRotate = lastRotate,
+                    block = { lastRotate = it }
                 )
-            ) {
-                lastRotate = value
             }
         }
     }
@@ -99,6 +96,30 @@ fun RoundProgressContent(
             )
         )
     }
+}
+
+private suspend fun Animatable<Float, AnimationVector1D>.runCircleAnimation(
+    speed: Float,
+    lastRotate: Float,
+    block: (Float) -> Unit,
+) {
+    run {
+        animateTo(
+            targetValue = CIRCLE_DEGREES + lastRotate,
+            animationSpec = infiniteRepeatable(
+                animation = tween(
+                    durationMillis = calculateAnimationDurationMillis(speed),
+                    easing = LinearEasing,
+                )
+            )
+        ) {
+            block(value)
+        }
+    }
+}
+
+private fun calculateAnimationDurationMillis(speed: Float): Int {
+    return ((1 - (sin(speed / 2 * PI) - 0.01f)) * ROUND_PROGRESS_DEFAULT_DURATION).roundToInt()
 }
 
 @Preview

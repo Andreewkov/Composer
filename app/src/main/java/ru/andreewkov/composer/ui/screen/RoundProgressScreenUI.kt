@@ -1,7 +1,6 @@
 package ru.andreewkov.composer.ui.screen
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -55,17 +54,6 @@ fun RoundProgressScreenUI() {
                     onProgressChanged = { sweepProgress = it }
                 )
             }
-        }
-        Column(
-            modifier = Modifier.width(400.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }
